@@ -1,0 +1,23 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Person(user, "User", "Uses the Short URL")
+Person(analyst, "Analyst", "Sees the analytic")
+
+System_Boundary(short_url_boundary, "Short URL App") {
+  System(user_front_end, "Front-end App", "The main front-end app")
+  System(analytic_front_end, "Analytic App", "Shows analytic information")
+  System(back_end, "Back-end App", "The whole back-end")
+}
+
+System_Ext(keycloak, "Keycloak")
+
+BiRel(user, user_front_end, "Get short/long url")
+Rel(analyst, analytic_front_end, "Get analytics")
+
+Rel(user_front_end, back_end, "URL commands")
+Rel(analytic_front_end, back_end, "Analytics commands")
+
+Rel(back_end, keycloak, "Authentication/Authorization")
+
+@enduml
