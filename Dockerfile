@@ -1,10 +1,12 @@
 FROM node:20
-
 WORKDIR /app
+
+COPY package*.json ./
+RUN yarn install
 
 COPY . .
 
-RUN yarn install
-RUN yarn build
+EXPOSE ${PORT}
 
-CMD [ "yarn", "run", "start" ]
+RUN yarn build
+CMD [ "yarn", "run", "start:dev" ]
