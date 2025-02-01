@@ -27,3 +27,16 @@
 ```
 docker compose up -d
 ```
+
+## Подключение к базе данных
+
+```
+docker exec -it short_url_db bash
+psql -h <host> -U <user> -d <db>
+
+# chose db
+\c short_url_db
+
+# show tables
+\dt
+```
