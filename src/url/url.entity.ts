@@ -1,4 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Url {
@@ -11,9 +16,6 @@ export class Url {
   @Column()
   code: string;
 
-  @Column()
-  shortUrl: string;
-
-  @Column()
+  @CreateDateColumn()
   createdAt: Date;
 }

@@ -4,7 +4,7 @@ info:
   title: Short URL API
 
 paths:
-  /link:
+  /url:
     post:
       summary: Create short url
       requestBody:
@@ -43,7 +43,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Link'
 
-  /link/:id:
+  /url/:id:
     delete:
       summary: Delete short url
       responses:
