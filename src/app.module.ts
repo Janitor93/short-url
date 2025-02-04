@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import appConfig from './config/app.config';
 import databaseConfig from './config/database.config';
 import { UrlModule } from './url/url.module';
-import { GlobalController } from './global/global.controller';
 import { GlobalModule } from './global/global.module';
 
 @Module({
@@ -15,6 +14,5 @@ import { GlobalModule } from './global/global.module';
     TypeOrmModule.forRoot(databaseConfig()),
     GlobalModule,
   ],
-  controllers: [GlobalController],
 })
 export class AppModule {}
