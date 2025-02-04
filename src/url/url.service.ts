@@ -20,7 +20,14 @@ export class UrlService {
     return await this.urlRepository.save(urlRecord);
   }
 
-  getOriginalUrl() {
-    throw new NotFoundException();
+  async getUrlInfo(code: string): Promise<Url> {
+    const urlInfo = await this.urlRepository.findOne({ where: { code } });
+    if (!urlInfo) throw new NotFoundException();
+    return urlInfo;
+  }
+
+  async getOriginalUrl(code: string): Promise<string> {
+    const urlInfo = await this.getUrlInfo(code);
+    return urlInfo.originalUrl;
   }
 }

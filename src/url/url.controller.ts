@@ -5,6 +5,7 @@ import {
   UsePipes,
   ValidationPipe,
   Get,
+  Param,
 } from '@nestjs/common';
 
 import { UrlService } from './url.service';
@@ -23,8 +24,9 @@ export class UrlController {
     return await this.urlService.createShortUrl(shortUrlDto);
   }
 
-  @Get()
-  public getOriginalUrl() {
-    return this.urlService.getOriginalUrl();
+  @Get(':shortCode')
+  public async getOriginalUrl(@Param('shortCode') shortCode: string) {
+    const originalUrl = await this.urlService.getUrlInfo(shortCode);
+    return originalUrl;
   }
 }
