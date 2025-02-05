@@ -22,6 +22,12 @@ services:
     depends_on:
       - short_url_db
 
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+
   short_url_api:
     container_name: short_url_api
     restart: always
@@ -42,3 +48,5 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+
+
