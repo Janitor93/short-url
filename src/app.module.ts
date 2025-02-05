@@ -6,6 +6,7 @@ import appConfig from './config/app.config';
 import databaseConfig from './config/database.config';
 import { UrlModule } from './url/url.module';
 import { GlobalModule } from './global/global.module';
+import { RedisCacheModule } from './redis-cache/redis-cache.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { GlobalModule } from './global/global.module';
     UrlModule,
     TypeOrmModule.forRoot(databaseConfig()),
     GlobalModule,
+    RedisCacheModule,
   ],
 })
 export class AppModule {}
