@@ -3,18 +3,12 @@ WORKDIR /app
 
 COPY ./package.json ./
 COPY yarn.lock ./
-<<<<<<< HEAD
-RUN yarn install
-
-COPY . .
-=======
 COPY tsconfig.json tsconfig.json
 COPY nest-cli.json nest-cli.json
 RUN yarn install
 
 COPY apps/short-url apps/short-url
 COPY libs libs
->>>>>>> c081387 (refactor(folder-structure): refactor folder structure)
 
 EXPOSE ${PORT}
 
