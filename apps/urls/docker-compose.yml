@@ -10,17 +10,6 @@ services:
       - ./volumes/postgres-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-  
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    restart: always
-    env_file:
-      - .env.${ENV:-local}
-    ports:
-      - "5050:80"
-    depends_on:
-      - short_url_db
 
   redis:
     image: redis:latest
@@ -32,7 +21,7 @@ services:
     container_name: short_url_api
     restart: always
     build:
-      context: ./apps/urls
+      context: .
       dockerfile: Dockerfile
       args:
         PORT: 8000
@@ -46,7 +35,7 @@ services:
     depends_on:
       - short_url_db
     volumes:
-      - ./apps/urls:/app
+      - .:/app
       - /app/node_modules
 
 
