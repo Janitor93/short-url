@@ -33,7 +33,7 @@ services:
     restart: always
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./apps/short-url/Dockerfile
       args:
         PORT: 8000
     env_file:

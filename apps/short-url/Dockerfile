@@ -3,9 +3,12 @@ WORKDIR /app
 
 COPY package.json ./
 COPY yarn.lock ./
+COPY tsconfig.json tsconfig.json
+COPY nest-cli.json nest-cli.json
 RUN yarn install
 
-COPY . .
+COPY apps/short-url apps/short-url
+COPY libs libs
 
 EXPOSE ${PORT}
 
