@@ -32,8 +32,8 @@ services:
     container_name: short_url_api
     restart: always
     build:
-      context: ./apps/urls
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./apps/short-url/Dockerfile
       args:
         PORT: 8000
     env_file:
