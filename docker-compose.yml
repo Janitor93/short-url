@@ -33,7 +33,7 @@ services:
     restart: always
     build:
       context: .
-      dockerfile: ./apps/urls/Dockerfile
+      dockerfile: ./apps/short-url/Dockerfile
       args:
         PORT: 8000
     env_file:
@@ -46,7 +46,7 @@ services:
     depends_on:
       - short_url_db
     volumes:
-      - ./apps/urls:/app
+      - ./apps/short-url:/app
       - /app/node_modules
 
 
