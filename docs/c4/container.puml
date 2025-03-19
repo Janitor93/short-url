@@ -1,0 +1,41 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "User", "Uses the Short URL")
+Person(analyst, "Analyst", "Sees the analytic")
+
+Container_Ext(keycloak, "Keycloak")
+
+Container_Boundary(short_url_boundary, "Short URL") {
+  Container_Boundary(short_url_front_boundary, "Front-end Apps") {
+    Container(user_front_end, "Front-end App", "Vue.js", "The main front-end app")
+    Container(analytic_front_end, "Analytic App", "React.js", "Shows analytic information")
+  }
+
+  Container(load_balancer, "Load Balancer", "Nginx", "Manages API routes")
+
+  Container_Boundary(back_end_services, "Back-end Services") {
+    Container(url_api, "URL API", "Nest.js", "Make short urls\nRedirect to long url")
+    Container(authorization_service, "Authorization Service", "Nest.js", "Works with Keycloak")
+    Container(analytic_api, "Analytic API", "Nest.js", "Works with analytics data")
+    Container(redis, "Redis")
+    ContainerDb(data_base, "Data Base", "Postgres", "Stores all data")
+  }
+}
+
+Rel(user, user_front_end, "")
+Rel(analyst, analytic_front_end, "")
+
+Rel(user_front_end, load_balancer, "https")
+Rel(analytic_front_end, load_balancer, "https")
+
+Rel(load_balancer, back_end_services, "REST")
+Rel(authorization_service, keycloak, "https")
+
+Rel(url_api, analytic_api, "gRPC")
+
+Rel(url_api, redis, "")
+Rel(url_api, data_base, "")
+Rel(analytic_api, data_base, "")
+
+@enduml

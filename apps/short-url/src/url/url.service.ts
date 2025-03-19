@@ -1,16 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { nanoid } from 'nanoid';
 
-import { RedisCacheService } from 'src/redis-cache/redis-cache.service';
+import { RedisCacheService } from '../redis-cache/redis-cache.service';
 import { Url } from './url.entity';
 import { CreateShortUrlDto } from './dto/create-short-url.dto';
+import { UrlRepository } from './url.repository';
 
 @Injectable()
 export class UrlService {
   constructor(
-    @InjectRepository(Url) private readonly urlRepository: Repository<Url>,
+    private readonly urlRepository: UrlRepository,
     private readonly cacheManager: RedisCacheService,
   ) {}
 
@@ -23,10 +22,9 @@ export class UrlService {
     const code = nanoid(7);
     const record = await this.urlRepository.findOne({ where: { originalUrl } });
     if (record) return record;
-    const urlRecord = this.urlRepository.create({ code, originalUrl });
-    const result = await this.urlRepository.save(urlRecord);
-    this.cacheManager.set(urlRecord.code, result);
-    return result;
+    const urlRecord = await this.urlRepository.save({ code, originalUrl });
+    this.cacheManager.set(urlRecord.code, urlRecord);
+    return urlRecord;
   }
 
   async getUrlInfo(code: string): Promise<Url> {

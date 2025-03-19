@@ -1,15 +1,16 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { DatabaseModule } from '@app/common';
 
 import { RedisCacheModule } from '../redis-cache/redis-cache.module';
 import { UrlController } from './url.controller';
 import { UrlService } from './url.service';
 import { Url } from './url.entity';
+import { UrlRepository } from './url.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Url]), RedisCacheModule],
+  imports: [DatabaseModule.forRoot([Url]), RedisCacheModule],
   controllers: [UrlController],
-  providers: [UrlService],
+  providers: [UrlService, UrlRepository],
   exports: [UrlService],
 })
 export class UrlModule {}
