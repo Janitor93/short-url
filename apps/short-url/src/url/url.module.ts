@@ -7,7 +7,7 @@ import { Url } from './url.entity';
 import { UrlRepository } from './url.repository';
 
 @Module({
-  imports: [DatabaseModule.forRoot([Url]), RedisModule],
+  imports: [DatabaseModule.forRoot([Url]), RedisModule.register('url')],
   controllers: [UrlController],
   providers: [UrlService, UrlRepository],
   exports: [UrlService],
