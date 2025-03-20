@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { nanoid } from 'nanoid';
+import { RedisService } from '@app/common';
 
-import { RedisCacheService } from '../redis-cache/redis-cache.service';
 import { Url } from './url.entity';
 import { CreateShortUrlDto } from './dto/create-short-url.dto';
 import { UrlRepository } from './url.repository';
@@ -10,7 +10,7 @@ import { UrlRepository } from './url.repository';
 export class UrlService {
   constructor(
     private readonly urlRepository: UrlRepository,
-    private readonly cacheManager: RedisCacheService,
+    private readonly cacheManager: RedisService,
   ) {}
 
   private async getRecordFromCache(code: string): Promise<Url | null> {
@@ -20,9 +20,10 @@ export class UrlService {
 
   async createShortUrl({ originalUrl }: CreateShortUrlDto): Promise<Url> {
     const code = nanoid(7);
-    const record = await this.urlRepository.findOne({ where: { originalUrl } });
-    if (record) return record;
-    const urlRecord = await this.urlRepository.save({ code, originalUrl });
+    let urlRecord = await this.urlRepository.findOne({ where: { originalUrl } });
+    if (!urlRecord) {
+      urlRecord = await this.urlRepository.save({ code, originalUrl });
+    }
     this.cacheManager.set(urlRecord.code, urlRecord);
     return urlRecord;
   }
