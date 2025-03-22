@@ -1,0 +1,31 @@
+services:
+  user_db:
+    container_name: user_db
+    image: postgres:17
+    env_file:
+      - ./apps/user/.env.${ENV:-local}
+    volumes:
+      - ./volumes/postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  user_api:
+    container_name: user_api
+    restart: always
+    build:
+      context: .
+      dockerfile: ./apps/user/Dockerfile
+      args:
+        PORT: 8001
+    env_file:
+      - ./apps/user/.env.${ENV:-local}
+    environment:
+      DB_HOST: user_db
+      DB_PORT: 5432
+    ports:
+      - "8001:8000"
+    depends_on:
+      - user_db
+    volumes:
+      - .:/app
+      - /app/node_modules
