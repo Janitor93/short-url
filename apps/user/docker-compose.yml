@@ -16,7 +16,7 @@ services:
       context: .
       dockerfile: ./apps/user/Dockerfile
       args:
-        PORT: 8001
+        PORT: 8000
     env_file:
       - ./apps/user/.env.${ENV:-local}
     environment:
