@@ -1,8 +1,14 @@
 import { NestFactory } from '@nestjs/core';
+import { VersioningType, ValidationPipe } from '@nestjs/common';
+
 import { UserModule } from './user.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(UserModule);
-  await app.listen(process.env.port ?? 3000);
+  app.enableCors();
+  app.setGlobalPrefix('api');
+  app.enableVersioning({ type: VersioningType.URI, defaultVersion: ['1'] });
+  app.useGlobalPipes(new ValidationPipe());
+  await app.listen(parseInt(process.env.PORT));
 }
 bootstrap();
