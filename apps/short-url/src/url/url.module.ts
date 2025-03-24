@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule, RedisModule, LoggerModule } from '@app/common';
+import { DatabaseModule, RedisModule } from '@app/common';
 
 import { UrlController } from './url.controller';
 import { UrlService } from './url.service';
@@ -9,8 +9,7 @@ import { UrlRepository } from './url.repository';
 @Module({
   imports: [
     DatabaseModule.forRoot([Url]),
-    RedisModule.register('url'),
-    LoggerModule.registry('url')
+    RedisModule.register('url')
   ],
   controllers: [UrlController],
   providers: [UrlService, UrlRepository],
