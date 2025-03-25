@@ -5,6 +5,7 @@ import {
   FindManyOptions,
   FindOneOptions,
 } from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { BaseEntity } from './base.entity';
 
 export abstract class AbstractRepository<T extends BaseEntity> {
@@ -29,6 +30,11 @@ export abstract class AbstractRepository<T extends BaseEntity> {
   }
 
   public async remove(data: T): Promise<T> {
-    return this.entity.remove(data);
+    return await this.entity.remove(data);
+  }
+
+  public async update(id: string, data: QueryDeepPartialEntity<T>): Promise<T> {
+    await this.entity.update(id, data);
+    return await this.findById(id);
   }
 }

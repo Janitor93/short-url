@@ -8,7 +8,7 @@ async function bootstrap() {
   app.enableCors();
   app.setGlobalPrefix('api');
   app.enableVersioning({ type: VersioningType.URI, defaultVersion: ['1'] });
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   await app.listen(parseInt(process.env.PORT));
 }
 bootstrap();
