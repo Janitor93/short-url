@@ -3,7 +3,7 @@ import { PasswordService } from '@app/common';
 
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
-import { CreateUserDto } from './dto';
+import { CreateUserDto, UpdateUserDto } from './dto';
 
 @Injectable()
 export class UserService {
@@ -29,5 +29,9 @@ export class UserService {
   public async getUserById(id: string): Promise<User> {
     const user = await this.userRepository.findById(id);
     return user;
+  }
+
+  public async updateUser(id: string, data: UpdateUserDto): Promise<User> {
+    return await this.userRepository.update(id, data);
   }
 }
