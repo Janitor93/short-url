@@ -4,6 +4,7 @@ import {
   FindOptionsWhere,
   FindManyOptions,
   FindOneOptions,
+  DeleteResult,
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { BaseEntity } from './base.entity';
@@ -29,8 +30,8 @@ export abstract class AbstractRepository<T extends BaseEntity> {
     return await this.entity.findOne(options);
   }
 
-  public async remove(data: T): Promise<T> {
-    return await this.entity.remove(data);
+  public async delete(id: string): Promise<DeleteResult> {
+    return await this.entity.delete(id);
   }
 
   public async update(id: string, data: QueryDeepPartialEntity<T>): Promise<T> {
