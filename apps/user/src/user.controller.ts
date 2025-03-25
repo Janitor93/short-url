@@ -8,12 +8,12 @@ import {
   Put,
   UseFilters,
   UseInterceptors,
-  UsePipes,
+  Query,
 } from '@nestjs/common';
 import { HttpExceptionFilter, PasswordInterceptor } from '@app/common';
 
 import { UserService } from './user.service';
-import { CreateUserDto, UpdateUserDto } from './dto';
+import { CreateUserDto, UpdateUserDto, GetUserListDto } from './dto';
 import { User } from './user.entity';
 
 @Controller('users')
@@ -31,6 +31,11 @@ export class UserController {
   @UseInterceptors(PasswordInterceptor)
   public async getUserById(@Param('id') id: string): Promise<User> {
     return await this.userService.getById(id);
+  }
+
+  @Get()
+  public async getUsers(@Query() getUserListDto: GetUserListDto): Promise<User[]> {
+    return await this.userService.getUsers(getUserListDto);
   }
 
   @Put('/:id')

@@ -3,7 +3,7 @@ import { PasswordService } from '@app/common';
 
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
-import { CreateUserDto, UpdateUserDto } from './dto';
+import { CreateUserDto, UpdateUserDto, GetUserListDto } from './dto';
 
 @Injectable()
 export class UserService {
@@ -35,6 +35,16 @@ export class UserService {
     await this.checkUserById(id);
     const user = await this.userRepository.findById(id);
     return user;
+  }
+
+  public async getUsers(pagination: GetUserListDto): Promise<User[]> {
+    const { page, limit } = pagination;
+    const users = await this.userRepository.findAll({
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    return users;
   }
 
   public async update(id: string, data: UpdateUserDto): Promise<User> {
