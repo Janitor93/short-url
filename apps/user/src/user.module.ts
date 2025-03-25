@@ -1,6 +1,11 @@
 import { Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { DatabaseModule, LoggerModule, PasswordModule, LoggingInterceptor } from '@app/common';
+import {
+  DatabaseModule,
+  LoggerModule,
+  PasswordModule,
+  LoggingInterceptor,
+} from '@app/common';
 
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
@@ -16,7 +21,7 @@ import { UserRepository } from './user.repository';
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
-    }
+    },
   ],
 })
 export class UserModule {}
