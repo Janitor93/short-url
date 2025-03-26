@@ -1,0 +1,16 @@
+services:
+  auth_api:
+    container_name: auth_api
+    restart: always
+    build:
+      context: .
+      dockerfile: ./apps/auth/Dockerfile
+      args:
+        PORT: 8000
+    env_file:
+      - ./apps/auth/.env.${ENV:-local}
+    ports:
+      - "8002:8000"
+    volumes:
+      - .:/app
+      - /app/node_modules
