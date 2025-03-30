@@ -5,7 +5,11 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "webpack": true,
-    "tsConfigPath": "apps/short-url/tsconfig.app.json"
+    "tsConfigPath": "apps/short-url/tsconfig.app.json",
+    "assets": [
+      "**/*.proto"
+    ],
+    "watchAssets": true
   },
   "monorepo": true,
   "root": "apps/short-url",
@@ -44,6 +48,15 @@
       "sourceRoot": "apps/auth/src",
       "compilerOptions": {
         "tsConfigPath": "apps/auth/tsconfig.app.json"
+      }
+    },
+    "grpc": {
+      "type": "library",
+      "root": "libs/grpc",
+      "entryFile": "index",
+      "sourceRoot": "libs/grpc/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/grpc/tsconfig.lib.json"
       }
     }
   }

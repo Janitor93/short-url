@@ -27,6 +27,11 @@ export class UserController {
     return await this.userService.create(createUserDto);
   }
 
+  @Get('/test')
+  public async test() {
+    return await this.userService.test();
+  }
+
   @Get('/:id')
   @UseInterceptors(PasswordInterceptor)
   public async getUserById(@Param('id') id: string): Promise<User> {
