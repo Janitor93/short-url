@@ -1,16 +1,25 @@
-import { Injectable, ForbiddenException } from '@nestjs/common';
+import { Injectable, ForbiddenException, OnModuleInit, Inject } from '@nestjs/common';
+import { ClientGrpc } from '@nestjs/microservices';
 import { PasswordService } from '@app/common';
+import { RpcAuthServiceClient, RPC_AUTH_SERVICE_NAME } from '@app/grpc';
 
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
 import { CreateUserDto, UpdateUserDto, GetUserListDto } from './dto';
 
 @Injectable()
-export class UserService {
+export class UserService implements OnModuleInit {
+  private authService: RpcAuthServiceClient;
+
   constructor(
     private readonly userRepository: UserRepository,
     private readonly passwordService: PasswordService,
+    @Inject(RPC_AUTH_SERVICE_NAME) private readonly client: ClientGrpc,
   ) {}
+
+  onModuleInit() {
+    this.authService = this.client.getService(RPC_AUTH_SERVICE_NAME);
+  }
 
   private async checkEmail(email: string): Promise<void> {
     const result = await this.userRepository.isEmailExist(email);

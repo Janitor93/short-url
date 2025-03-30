@@ -1,12 +1,14 @@
 import { Controller, Get } from '@nestjs/common';
+import { RpcAuthServiceController, RpcAuthServiceControllerMethods, ValidateTokenResponse } from '@app/grpc';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
-export class AuthController {
+@RpcAuthServiceControllerMethods()
+export class AuthController implements RpcAuthServiceController {
   constructor(private readonly authService: AuthService) {}
 
   @Get()
-  getHello(): string {
-    return this.authService.getHello();
+  validateUserTokenRpc(): ValidateTokenResponse {
+    return {} as ValidateTokenResponse;
   }
 }
