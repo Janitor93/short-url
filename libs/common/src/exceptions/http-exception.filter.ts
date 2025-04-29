@@ -7,7 +7,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
   constructor(private readonly logger: LoggerService) {}
 
   catch(exception: HttpException, host: ArgumentsHost) {
-    console.log('kek');
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
@@ -18,7 +17,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const message = exception instanceof HttpException
       ? exception.message
       : 'Internal server error';
-    console.log('message', message);
+
     this.logger.error(exception);
     response
       .status(status)
