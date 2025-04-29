@@ -1,7 +1,7 @@
-import { Injectable, ForbiddenException, OnModuleInit, Inject } from '@nestjs/common';
-import { ClientGrpc } from '@nestjs/microservices';
+import { Injectable, ForbiddenException, OnModuleInit, Inject, HttpStatus } from '@nestjs/common';
+import { ClientGrpc, RpcException } from '@nestjs/microservices';
 import { PasswordService } from '@app/common';
-import { RpcAuthServiceClient, RPC_AUTH_SERVICE_NAME } from '@app/grpc';
+import { RpcAuthServiceClient, RPC_AUTH_SERVICE_NAME, UserCredentialsResponse } from '@app/grpc';
 
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
@@ -64,5 +64,16 @@ export class UserService implements OnModuleInit {
   public async delete(id: string): Promise<void> {
     await this.checkUserById(id);
     await this.userRepository.delete(id);
+  }
+
+  public async compareCredentials(email: string, password: string): Promise<UserCredentialsResponse> {
+    const user = await this.userRepository.findUserByEmail(email);
+    const result = await this.passwordService.comparePasswords(password, user.password);
+    if (!result) throw new RpcException({
+      code: HttpStatus.FORBIDDEN,
+      message: 'Login or password is incorrect',
+      details: [],
+    });
+    return { userId: user.id, email: user.email };
   }
 }

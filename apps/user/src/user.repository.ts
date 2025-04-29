@@ -16,4 +16,9 @@ export class UserRepository extends AbstractRepository<User> {
   public async isEmailExist(email: string): Promise<boolean> {
     return await this.userRepository.existsBy({ email });
   }
+
+  public async findUserByEmail(email: string): Promise<User> {
+    const user = await this.userRepository.findOneByOrFail({ email });
+    return user;
+  }
 }

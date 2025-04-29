@@ -10,15 +10,22 @@ import {
   UseInterceptors,
   Query,
 } from '@nestjs/common';
-import { HttpExceptionFilter, PasswordInterceptor } from '@app/common';
+import { HttpExceptionFilter, PasswordInterceptor, RpcExceptionFilter } from '@app/common';
+import {
+  RpcUserServiceController,
+  RpcUserServiceControllerMethods,
+  UserCredentials,
+  UserCredentialsResponse,
+} from '@app/grpc';
 
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto, GetUserListDto } from './dto';
 import { User } from './user.entity';
 
 @Controller('users')
-@UseFilters(HttpExceptionFilter)
-export class UserController {
+@UseFilters(HttpExceptionFilter, RpcExceptionFilter)
+@RpcUserServiceControllerMethods()
+export class UserController implements RpcUserServiceController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
@@ -50,5 +57,11 @@ export class UserController {
   @Delete('/:id')
   public async deleteUser(@Param('id') id: string): Promise<void> {
     return await this.userService.delete(id);
+  }
+
+  public async compareCredentials(request: UserCredentials): Promise<UserCredentialsResponse> {
+    const { email, password } = request;
+    const result = await this.userService.compareCredentials(email, password);
+    return result;
   }
 }

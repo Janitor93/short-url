@@ -1,0 +1,17 @@
+syntax = 'proto3';
+
+package user;
+
+service RpcUserService {
+  rpc CompareCredentials (UserCredentials) returns (UserCredentialsResponse) {};
+}
+
+message UserCredentials {
+  string email = 1;
+  string password = 2;
+}
+
+message UserCredentialsResponse {
+  string userId = 1;
+  string email = 2;
+}
