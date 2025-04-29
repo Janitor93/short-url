@@ -4,6 +4,6 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
 
-  @IsStrongPassword()
+  @IsStrongPassword({ minLength: 8 })
   password: string;
 }

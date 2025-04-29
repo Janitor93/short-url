@@ -12,5 +12,7 @@ services:
     image: redis:latest
     container_name: redis
     restart: always
+    env_file:
+      - .env.${ENV:-local}
     ports:
       - "6379:6379"
