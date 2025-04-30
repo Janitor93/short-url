@@ -1,34 +1,23 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
   UseFilters,
   UseGuards,
 } from '@nestjs/common';
-import {
-  RpcAuthServiceController,
-  RpcAuthServiceControllerMethods,
-  ValidateTokenResponse,
-} from '@app/grpc';
 import { HttpExceptionFilter, JwtAuthGuard } from '@app/common';
 
 import { AuthService } from './auth.service';
-import { LoginDto } from './dto';
+import { LoginDto, RefreshTokenDto } from './dto';
+import { TokenResponse } from './interfaces';
 
 @Controller('auth')
 @UseFilters(HttpExceptionFilter)
-@RpcAuthServiceControllerMethods()
-export class AuthController implements RpcAuthServiceController {
+export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Get()
-  validateUserTokenRpc(): ValidateTokenResponse {
-    return {} as ValidateTokenResponse;
-  }
-
   @Post('/login')
-  public async login(@Body() loginDto: LoginDto) {
+  public async login(@Body() loginDto: LoginDto): Promise<TokenResponse> {
     const { email, password } = loginDto;
     return await this.authService.login(email, password);
   }
@@ -37,5 +26,11 @@ export class AuthController implements RpcAuthServiceController {
   @UseGuards(JwtAuthGuard)
   public async logout() {
     throw new Error('Not implemented yet');
+  }
+
+  @Post('/refresh_token')
+  public async refreshToken(@Body() refreshTokenDto: RefreshTokenDto): Promise<TokenResponse> {
+    const { refreshToken } = refreshTokenDto;
+    return await this.authService.refreshToken(refreshToken);
   }
 }
