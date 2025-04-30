@@ -75,5 +75,10 @@ export class AuthService implements OnModuleInit {
     }
   }
 
-  private 
+  public async logout(email: string, refreshToken: string) {
+    const userEmail = await this.cacheManager.get(refreshToken);
+    if (email !== userEmail) throw new UnauthorizedException();
+    await this.cacheManager.del(refreshToken);
+    return { message: 'success' };
+  }
 }
