@@ -5,7 +5,7 @@ import {
   UseFilters,
   UseGuards,
 } from '@nestjs/common';
-import { HttpExceptionFilter, JwtAuthGuard } from '@app/common';
+import { HttpExceptionFilter, JwtAuthGuard, CurrentUser } from '@app/common';
 
 import { AuthService } from './auth.service';
 import { LoginDto, RefreshTokenDto } from './dto';
@@ -24,8 +24,11 @@ export class AuthController {
 
   @Post('/logout')
   @UseGuards(JwtAuthGuard)
-  public async logout() {
-    throw new Error('Not implemented yet');
+  public async logout(
+    @CurrentUser('email') email: string,
+    @Body('refreshToken') refreshToken: string
+  ) {
+    return await this.authService.logout(email, refreshToken);
   }
 
   @Post('/refresh_token')
