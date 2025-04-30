@@ -2,6 +2,7 @@ import { join } from 'path';
 import { Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { JwtService } from '@nestjs/jwt';
 import {
   DatabaseModule,
   LoggerModule,
@@ -34,6 +35,7 @@ import { UserRepository } from './user.repository';
   providers: [
     UserService,
     UserRepository,
+    JwtService,
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
