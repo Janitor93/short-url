@@ -2,7 +2,7 @@ import { join } from 'path';
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { JwtModule } from '@nestjs/jwt';
-import { RedisModule } from '@app/common';
+import { RedisModule, LoggerModule } from '@app/common';
 import { RPC_USER_SERVICE_NAME, USER_PACKAGE_NAME, GrpcService } from '@app/grpc';
 
 import { AuthController } from './auth.controller';
@@ -10,6 +10,7 @@ import { AuthService } from './auth.service';
 
 @Module({
   imports: [
+    LoggerModule.registry('auth'),
     RedisModule.register('refresh'),
     ClientsModule.register([{
       name: RPC_USER_SERVICE_NAME,

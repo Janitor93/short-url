@@ -9,8 +9,15 @@ import {
   UseFilters,
   UseInterceptors,
   Query,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
-import { HttpExceptionFilter, PasswordInterceptor, RpcExceptionFilter } from '@app/common';
+import {
+  HttpExceptionFilter,
+  PasswordInterceptor,
+  RpcExceptionFilter,
+  JwtAuthGuard,
+} from '@app/common';
 import {
   RpcUserServiceController,
   RpcUserServiceControllerMethods,
@@ -41,20 +48,24 @@ export class UserController implements RpcUserServiceController {
   }
 
   @Get()
+  @UseInterceptors(PasswordInterceptor)
   public async getUsers(@Query() getUserListDto: GetUserListDto): Promise<User[]> {
     return await this.userService.getUsers(getUserListDto);
   }
 
-  @Put('/:id')
+  @Put()
   @UseInterceptors(PasswordInterceptor)
+  @UseGuards(JwtAuthGuard)
   public async updateUser(
-    @Param('id') id: string,
+    @Request() request,
     @Body() updateUserDto: UpdateUserDto
   ): Promise<User> {
-    return await this.userService.update(id, updateUserDto);
+    const { userId } = request.user;
+    return await this.userService.update(userId, updateUserDto);
   }
 
-  @Delete('/:id')
+  @Delete()
+  @UseGuards(JwtAuthGuard)
   public async deleteUser(@Param('id') id: string): Promise<void> {
     return await this.userService.delete(id);
   }
