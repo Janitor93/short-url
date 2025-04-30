@@ -1,8 +1,9 @@
 import { join } from 'path';
 import { Module } from '@nestjs/common';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { JwtModule } from '@nestjs/jwt';
-import { RedisModule, LoggerModule } from '@app/common';
+import { RedisModule, LoggerModule, LoggingInterceptor } from '@app/common';
 import { RPC_USER_SERVICE_NAME, USER_PACKAGE_NAME, GrpcService } from '@app/grpc';
 
 import { AuthController } from './auth.controller';
@@ -27,6 +28,12 @@ import { AuthService } from './auth.service';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [
+    AuthService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    }
+  ],
 })
 export class AuthModule {}

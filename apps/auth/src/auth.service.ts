@@ -1,9 +1,11 @@
-import { Injectable, Inject, OnModuleInit, ForbiddenException } from '@nestjs/common';
+import { Injectable, Inject, OnModuleInit, ForbiddenException, UnauthorizedException } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { RpcUserServiceClient, RPC_USER_SERVICE_NAME, UserCredentialsResponse } from '@app/grpc';
 import { firstValueFrom } from 'rxjs';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { RedisService } from '@app/common';
+
+import { TokenPayload, TokenResponse } from './interfaces';
 
 @Injectable()
 export class AuthService implements OnModuleInit {
@@ -19,7 +21,7 @@ export class AuthService implements OnModuleInit {
     this.userService = this.client.getService(RPC_USER_SERVICE_NAME);
   }
 
-  public async login(email: string, password: string) {
+  public async login(email: string, password: string): Promise<TokenResponse> {
     let user: UserCredentialsResponse;
     try {
       user = await firstValueFrom(this.userService.compareCredentials({ email, password }));
@@ -29,15 +31,49 @@ export class AuthService implements OnModuleInit {
         message: error.details || error.message,
       });
     }
-    const payload = { sub: user.userId, email };
-
-    const response = {
-      accessToken: await this.jwtService.signAsync(payload),
-      refreshToken: await this.jwtService.signAsync(payload, { expiresIn: '10d' }),
-    };
+    const payload: TokenPayload = { sub: user.userId, email };
+    const response = this.generateTokenResponse(payload);
 
     await this.cacheManager.set(response.refreshToken, email);
 
     return response;
   }
+
+  public async refreshToken(refreshToken: string): Promise<TokenResponse> {
+    const userInfo = this.validateToken(refreshToken);
+    const userEmail = await this.cacheManager.get<string>(refreshToken);
+    if (userInfo.email !== userEmail) throw new UnauthorizedException('Invalid refresh token');
+
+    const payload: TokenPayload = { sub: userInfo.sub, email: userInfo.email };
+    const response: TokenResponse = this.generateTokenResponse(payload);
+
+    await Promise.all([
+      this.cacheManager.del(refreshToken),
+      this.cacheManager.set(response.refreshToken, payload.email),
+    ]);
+
+    return response;
+  }
+
+  private generateTokenResponse(payload: TokenPayload): TokenResponse {
+    return {
+      accessToken: this.generateToken(payload),
+      refreshToken: this.generateToken(payload, { expiresIn: '10d' }),
+    };
+  }
+
+  private generateToken(payload: TokenPayload, options?: JwtSignOptions): string {
+    return this.jwtService.sign(payload, options);
+  }
+
+  private validateToken(token: string) {
+    try {
+      const payload = this.jwtService.verify<TokenPayload>(token);
+      return payload;
+    } catch (error) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+  }
+
+  private 
 }
