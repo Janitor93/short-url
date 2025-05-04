@@ -1,4 +1,12 @@
-export default () => ({
-  port: parseInt(process.env.PORT),
-  secret: process.env.SECRET_KEY,
-});
+export const appConfig = {
+  app: {
+    internalPort: Number(process.env.INTERNAL_PORT),
+    externalPort: Number(process.env.EXTERNAL_PORT),
+  },
+  logger: {
+    namespace: 'url',
+  },
+  cache: {
+    namespace: 'url',
+  },
+};
