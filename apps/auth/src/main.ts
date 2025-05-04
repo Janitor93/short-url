@@ -3,7 +3,9 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AUTH_PACKAGE_NAME, GrpcService } from '@app/grpc';
+
 import { AuthModule } from './auth.module';
+import { appConfig } from './config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AuthModule);
@@ -12,7 +14,7 @@ async function bootstrap() {
     options: {
       package: AUTH_PACKAGE_NAME,
       protoPath: join(__dirname, `../../../libs/grpc/${GrpcService.getAuthProtoPath()}`),
-      url: `${process.env.URL}:8002`,
+      url: `${appConfig.app.url}:${appConfig.app.externalPort}`,
     },
   });
   app.enableCors();
@@ -20,6 +22,6 @@ async function bootstrap() {
   app.enableVersioning({ type: VersioningType.URI, defaultVersion: ['1'] });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   await app.startAllMicroservices();
-  await app.listen(parseInt(process.env.PORT));
+  await app.listen(appConfig.app.internalPort);
 }
 bootstrap();

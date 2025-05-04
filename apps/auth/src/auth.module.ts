@@ -8,23 +8,24 @@ import { RPC_USER_SERVICE_NAME, USER_PACKAGE_NAME, GrpcService } from '@app/grpc
 
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { appConfig } from './config';
 
 @Module({
   imports: [
-    LoggerModule.registry('auth'),
-    RedisModule.register('refresh'),
+    LoggerModule.registry(appConfig.logger.namespace),
+    RedisModule.register(appConfig.cache.namespace),
     ClientsModule.register([{
       name: RPC_USER_SERVICE_NAME,
       transport: Transport.GRPC,
       options: {
         package: USER_PACKAGE_NAME,
         protoPath: join(__dirname, `../../../libs/grpc/${GrpcService.getUserProtoPath()}`),
-        url: `${process.env.USER_URL}:${process.env.USER_PORT}`,
+        url: `${appConfig.userApp.url}:${appConfig.userApp.port}`,
       },
     }]),
     JwtModule.register({
-      secret: process.env.SECRET_KEY,
-      signOptions: { expiresIn: '10m' },
+      secret: appConfig.jwt.secretKey,
+      signOptions: { expiresIn: appConfig.jwt.expiresIn },
     }),
   ],
   controllers: [AuthController],

@@ -1,32 +1,17 @@
-version: '3.8'
-
 services:
   short_url_db:
     container_name: short_url_db
     image: postgres:17
     env_file:
-      - .env.${ENV:-local}
+      - ./apps/user/.env.${ENV:-local}
+    environment:
+      POSTGRES_DB: short_url_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
     volumes:
       - ./volumes/postgres-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-  
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    restart: always
-    env_file:
-      - .env.${ENV:-local}
-    ports:
-      - "5050:80"
-    depends_on:
-      - short_url_db
-
-  redis:
-    image: redis:latest
-    restart: always
-    ports:
-      - "6379:6379"
 
   short_url_api:
     container_name: short_url_api
@@ -37,10 +22,7 @@ services:
       args:
         PORT: 8000
     env_file:
-      - .env.${ENV:-local}
-    environment:
-      DB_HOST: short_url_db
-      DB_PORT: 5432
+      - ./apps/short-url/.env.${ENV:-local}
     ports:
       - "8000:8000"
     depends_on:

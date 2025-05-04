@@ -6,6 +6,7 @@ import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { RedisService } from '@app/common';
 
 import { TokenPayload, TokenResponse } from './interfaces';
+import { appConfig } from './config';
 
 @Injectable()
 export class AuthService implements OnModuleInit {
@@ -58,7 +59,7 @@ export class AuthService implements OnModuleInit {
   private generateTokenResponse(payload: TokenPayload): TokenResponse {
     return {
       accessToken: this.generateToken(payload),
-      refreshToken: this.generateToken(payload, { expiresIn: '10d' }),
+      refreshToken: this.generateToken(payload, { expiresIn: appConfig.cache.expiresIn }),
     };
   }
 
