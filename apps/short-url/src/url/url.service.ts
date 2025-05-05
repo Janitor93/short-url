@@ -18,11 +18,14 @@ export class UrlService {
     return result;
   }
 
-  async createShortUrl({ originalUrl }: CreateShortUrlDto): Promise<Url> {
+  async createShortUrl({ originalUrl }: CreateShortUrlDto, userId: string = null): Promise<Url> {
     const code = nanoid(7);
-    let urlRecord = await this.urlRepository.findOne({ where: { originalUrl } });
+    const urlRecords = await this.urlRepository.findAll({ where: { originalUrl } });
+    let urlRecord = urlRecords.find((record) => {
+      return record.originalUrl === originalUrl && record.userId === userId
+    });
     if (!urlRecord) {
-      urlRecord = await this.urlRepository.save({ code, originalUrl });
+      urlRecord = await this.urlRepository.save({ code, originalUrl, userId });
     }
     this.cacheManager.set(urlRecord.code, urlRecord);
     return urlRecord;

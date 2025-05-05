@@ -16,6 +16,9 @@ export class Url {
   @Column()
   code: string;
 
+  @Column({ nullable: true })
+  userId: string;
+
   @CreateDateColumn()
   createdAt: Date;
 }

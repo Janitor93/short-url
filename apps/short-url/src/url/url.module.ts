@@ -1,5 +1,6 @@
-import { Module } from '@nestjs/common';
-import { DatabaseModule, RedisModule } from '@app/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import { DatabaseModule, RedisModule, DecodeTokenMiddleware } from '@app/common';
+import { JwtService } from '@nestjs/jwt';
 
 import { UrlController } from './url.controller';
 import { UrlService } from './url.service';
@@ -13,7 +14,13 @@ import { appConfig } from '../config';
     RedisModule.register(appConfig.cache.namespace)
   ],
   controllers: [UrlController],
-  providers: [UrlService, UrlRepository],
+  providers: [UrlService, UrlRepository, JwtService],
   exports: [UrlService],
 })
-export class UrlModule {}
+export class UrlModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(DecodeTokenMiddleware)
+      .forRoutes({ path: '*', method: RequestMethod.POST });
+  }
+}
