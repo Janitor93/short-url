@@ -7,6 +7,7 @@ import {
   Get,
   Param,
 } from '@nestjs/common';
+import { CurrentUser } from '@app/common';
 
 import { UrlService } from './url.service';
 import { Url } from './url.entity';
@@ -20,8 +21,9 @@ export class UrlController {
   @UsePipes(new ValidationPipe())
   public async createShortUrl(
     @Body() shortUrlDto: CreateShortUrlDto,
+    @CurrentUser('userId') userId: string,
   ): Promise<Url> {
-    return await this.urlService.createShortUrl(shortUrlDto);
+    return await this.urlService.createShortUrl(shortUrlDto, userId);
   }
 
   @Get(':shortCode')
