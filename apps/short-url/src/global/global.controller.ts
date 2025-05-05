@@ -1,5 +1,6 @@
 import { Controller, Get, Param, Res, VERSION_NEUTRAL } from '@nestjs/common';
 import { Response } from 'express';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 import { UrlService } from '../url/url.service';
 
@@ -10,6 +11,13 @@ export class GlobalController {
   constructor(private readonly urlService: UrlService) {}
 
   @Get(':shortCode')
+  @ApiOperation({
+    summary: 'Redirects from short URL to original URL',
+  })
+  @ApiResponse({
+    status: 301,
+    description: 'Redirection to original URL',
+  })
   async redirectToOriginalUrl(
     @Param('shortCode') shortCode: string,
     @Res() res: Response,
