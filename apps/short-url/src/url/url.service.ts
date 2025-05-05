@@ -22,7 +22,7 @@ export class UrlService {
     const code = nanoid(7);
     const urlRecords = await this.urlRepository.findAll({ where: { originalUrl } });
     let urlRecord = urlRecords.find((record) => {
-      return record.originalUrl === originalUrl && record.userId === userId
+      return record.originalUrl === originalUrl && record.userId === userId;
     });
     if (!urlRecord) {
       urlRecord = await this.urlRepository.save({ code, originalUrl, userId });
