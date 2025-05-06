@@ -25,7 +25,11 @@
 Для запуска выпоняем команду:
 
 ```
-docker compose up -d
+docker compose -f docker-compose.base.yml
+               -f apps/auth/docker-compose.yml
+               -f apps/user/docker-compose.yml
+               -f apps/short-url/docker-compose.yml
+               up -d
 ```
 
 ## Подключение к базе данных
