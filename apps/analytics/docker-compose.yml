@@ -1,0 +1,16 @@
+services:
+  analytics_api:
+    container_name: analytics_api
+    restart: always
+    build:
+      context: .
+      dockerfile: ./apps/analytics/Dockerfile
+      args:
+        PORT: 8000
+    env_file:
+      - ./apps/analytics/.env.${ENV:-local}
+    ports:
+      - "8003:8000"
+    volumes:
+      - .:/app
+      - /app/node_modules
