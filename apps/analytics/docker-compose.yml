@@ -14,3 +14,15 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+
+  analytics_db:
+    image: mongo:6.0
+    container_name: mongodb
+    restart: always
+    env_file:
+      - ./apps/analytics/.env.${ENV:-local}
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./volumes/mongodb-data:/data/db
+    

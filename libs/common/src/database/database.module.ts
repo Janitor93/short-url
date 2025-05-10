@@ -1,25 +1,20 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import databaseConfig from '../config/database.config';
+import { DatabaseOptions } from './database-options.interface';
 
 @Module({})
 export class DatabaseModule {
-  static forRoot(entities = []): DynamicModule {
+  static forRoot(options: DatabaseOptions): DynamicModule {
+    const { type, entities } = options;
     return {
       module: DatabaseModule,
       imports: [
         TypeOrmModule.forFeature(entities),
-        TypeOrmModule.forRootAsync({
-          imports: [ConfigModule, TypeOrmModule.forRoot(databaseConfig())],
-          inject: [ConfigService],
-          useFactory: async () => {
-            return {
-              ...databaseConfig(),
-              entities,
-            };
-          },
+        TypeOrmModule.forRoot({
+          ...databaseConfig(type),
+          entities,
         }),
       ],
       exports: [TypeOrmModule],
