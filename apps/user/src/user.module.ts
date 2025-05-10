@@ -16,7 +16,7 @@ import { appConfig } from './config';
 
 @Module({
   imports: [
-    DatabaseModule.forRoot([User]),
+    DatabaseModule.forRoot({ type: 'postgres', entities: [User]}),
     LoggerModule.registry(appConfig.logger.namespace),
     PasswordModule,
   ],

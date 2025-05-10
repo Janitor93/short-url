@@ -10,7 +10,7 @@ import { appConfig } from '../config';
 
 @Module({
   imports: [
-    DatabaseModule.forRoot([Url]),
+    DatabaseModule.forRoot({ type: 'postgres', entities: [Url] }),
     RedisModule.register(appConfig.cache.namespace)
   ],
   controllers: [UrlController],
