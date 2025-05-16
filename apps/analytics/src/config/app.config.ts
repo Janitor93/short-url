@@ -6,5 +6,8 @@ export const appConfig = {
   },
   logger: {
     namespace: 'analytics',
-  }
+  },
+  pagination: {
+    limit: 20,
+  },
 };

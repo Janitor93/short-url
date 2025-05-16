@@ -17,6 +17,7 @@ import {
   PasswordInterceptor,
   RpcExceptionFilter,
   JwtAuthGuard,
+  Pagination,
 } from '@app/common';
 import {
   RpcUserServiceController,
@@ -24,7 +25,7 @@ import {
   UserCredentials,
   UserCredentialsResponse,
 } from '@app/grpc';
-import { ApiOperation, ApiResponse, ApiHeader } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiHeader, ApiQuery } from '@nestjs/swagger';
 
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto, GetUserListDto } from './dto';
@@ -86,6 +87,8 @@ export class UserController implements RpcUserServiceController {
   @ApiOperation({
     summary: 'Get list of users',
   })
+  @ApiQuery({ name: 'page', required: false, default: 1, description: 'Page number', example: 1 })
+  @ApiQuery({ name: 'limit', required: false, default: 10, description: 'Items per page', example: 10 })
   @ApiResponse({
     status: 200,
     description: 'Returns array of users',
@@ -97,7 +100,7 @@ export class UserController implements RpcUserServiceController {
     }],
   })
   @UseInterceptors(PasswordInterceptor)
-  public async getUsers(@Query() getUserListDto: GetUserListDto): Promise<User[]> {
+  public async getUsers(@Query() getUserListDto: GetUserListDto): Promise<Pagination<User>> {
     return await this.userService.getUsers(getUserListDto);
   }
 

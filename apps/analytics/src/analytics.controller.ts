@@ -1,17 +1,18 @@
-import { Controller, Post, Put, Body, UseFilters, Param } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { HttpExceptionFilter } from '@app/common';
+import { Controller, Post, Put, Get, Body, UseFilters, Param, Query } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
+import { HttpExceptionFilter, Pagination } from '@app/common';
 
 import { AnalyticsService } from './analytics.service';
 import { CreateUrlAnalyticsDto } from './dto';
 import { UrlAnalytics } from './interfaces';
+import { Analytics } from './analytics.entity';
 
 @Controller('analytics')
 @UseFilters(HttpExceptionFilter)
 export class AnalyticsController {
   constructor(private readonly analyticsService: AnalyticsService) {}
 
-  @Post('/url')
+  @Post('/urls')
   @ApiOperation({
     summary: 'Create url analytics',
     description: `Initial point to count analytics.
@@ -27,7 +28,7 @@ export class AnalyticsController {
     return await this.analyticsService.createUrlAnalytics(createUrlAnalyticsDto);
   }
 
-  @Put('/url/:id')
+  @Put('/urls/:id')
   @ApiOperation({
     summary: 'Update click statistic'
   })
@@ -37,5 +38,17 @@ export class AnalyticsController {
   })
   async incrementClicks(@Param('id') id: string): Promise<void> {
     await this.analyticsService.incrementClicks(id);
+  }
+
+  @Get('/urls')
+  @ApiOperation({
+    summary: 'Return user\'s analytics'
+  })
+  @ApiQuery({ name: 'page', required: false, default: 1, description: 'Page number', example: 1 })
+  async getUserAnalytics(
+    @Body('userId') userId: string,
+    @Query('page') page: number,
+  ): Promise<Pagination<Analytics>> {
+    return await this.analyticsService.getUserAnalytics(userId, page);
   }
 }

@@ -7,7 +7,9 @@ import {
   DeleteResult,
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+
 import { BaseEntity } from './base.entity';
+import { Pagination } from '../interfaces';
 
 export abstract class AbstractRepository<T extends BaseEntity> {
   constructor(private readonly entity: Repository<T>) {}
@@ -22,8 +24,27 @@ export abstract class AbstractRepository<T extends BaseEntity> {
     return await this.entity.findOneBy(options);
   }
 
-  public async findAll(options?: FindManyOptions<T>): Promise<T[]> {
-    return await this.entity.find(options);
+  public async findAll(
+    filters?: FindOptionsWhere<T>,
+    page?: number,
+    limit?: number,
+  ): Promise<Pagination<T>> {
+    const skip = (page - 1) * limit;
+    const [data, total] = await this.entity.findAndCount({
+      where: filters,
+      skip,
+      take: limit,
+    });
+
+    return {
+      data,
+      pagination: {
+        itemsPerPage: limit,
+        totalItems: total,
+        totalPages: Math.ceil(total / limit),
+        page,
+      },
+    };
   }
 
   public async findOne(options: FindOneOptions<T>): Promise<T> {

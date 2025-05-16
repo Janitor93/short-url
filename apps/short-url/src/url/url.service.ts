@@ -20,8 +20,8 @@ export class UrlService {
 
   async createShortUrl({ originalUrl }: CreateShortUrlDto, userId: string = null): Promise<Url> {
     const code = nanoid(7);
-    const urlRecords = await this.urlRepository.findAll({ where: { originalUrl } });
-    let urlRecord = urlRecords.find((record) => {
+    const urlRecords = await this.urlRepository.findAll({ originalUrl });
+    let urlRecord = urlRecords.data.find((record) => {
       return record.originalUrl === originalUrl && record.userId === userId;
     });
     if (!urlRecord) {
