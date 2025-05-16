@@ -4,4 +4,7 @@ export const appConfig = {
     externalPort: Number(process.env.EXTERNAL_PORT),
     internalPort: Number(process.env.INTERNAL_PORT),
   },
+  logger: {
+    namespace: 'analytics',
+  }
 };
