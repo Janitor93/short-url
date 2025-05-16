@@ -4,11 +4,15 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  ObjectId,
 } from 'typeorm';
 
 @Entity()
 export class Analytics {
   @ObjectIdColumn()
+  _id: ObjectId;
+
+  @Column()
   id: string;
 
   @Column()
