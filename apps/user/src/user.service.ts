@@ -1,6 +1,6 @@
 import { Injectable, ForbiddenException, HttpStatus } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
-import { PasswordService } from '@app/common';
+import { PasswordService, Pagination } from '@app/common';
 import { UserCredentialsResponse } from '@app/grpc';
 
 import { UserRepository } from './user.repository';
@@ -39,12 +39,9 @@ export class UserService {
     return user;
   }
 
-  public async getUsers(pagination: GetUserListDto): Promise<User[]> {
+  public async getUsers(pagination: GetUserListDto): Promise<Pagination<User>> {
     const { page, limit } = pagination;
-    const users = await this.userRepository.findAll({
-      skip: (page - 1) * limit,
-      take: limit,
-    });
+    const users = await this.userRepository.findAll({}, page, limit);
 
     return users;
   }
