@@ -1,6 +1,6 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
+  ObjectIdColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
@@ -8,14 +8,17 @@ import {
 
 @Entity()
 export class Analytics {
-  @PrimaryGeneratedColumn('uuid')
+  @ObjectIdColumn()
   id: string;
+
+  @Column()
+  userId: string;
 
   @Column()
   urlId: string;
 
-  @Column()
-  clicks: number;
+  @Column('number')
+  clicks: number = 0;
 
   @CreateDateColumn()
   createdAt: Date;

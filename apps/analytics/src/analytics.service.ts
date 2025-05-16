@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { AnalyticsRepository } from './analytics.repository';
+import { UrlAnalytics } from './interfaces';
 
 @Injectable()
 export class AnalyticsService {
@@ -8,8 +9,11 @@ export class AnalyticsService {
     private readonly analyticsRepository: AnalyticsRepository,
   ) {}
 
-  getHello(): string {
-    this.analyticsRepository.save({ urlId: '1', clicks: 1 });
-    return 'Hello World!';
+  async getCountryByIp(): Promise<void> {
+    throw new Error('Not implemented yet');
+  }
+
+  async createUrlAnalytics({ userId, urlId }: UrlAnalytics): Promise<UrlAnalytics> {
+    return await this.analyticsRepository.save({ userId, urlId });
   }
 }
