@@ -67,15 +67,6 @@
       "compilerOptions": {
         "tsConfigPath": "apps/analytics/tsconfig.app.json"
       }
-    },
-    "common/http-client": {
-      "type": "library",
-      "root": "libs/common/http-client",
-      "entryFile": "index",
-      "sourceRoot": "libs/common/http-client/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/common/http-client/tsconfig.lib.json"
-      }
     }
   }
 }

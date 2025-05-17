@@ -29,12 +29,6 @@
       ],
       "@app/grpc/*": [
         "libs/grpc/src/*"
-      ],
-      "@app/common/http-client": [
-        "libs/common/http-client/src"
-      ],
-      "@app/common/http-client/*": [
-        "libs/common/http-client/src/*"
       ]
     }
   },

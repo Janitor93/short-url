@@ -95,8 +95,7 @@
     ],
     "moduleNameMapper": {
       "^@app/common(|/.*)$": "<rootDir>/libs/common/src/$1",
-      "^@app/grpc(|/.*)$": "<rootDir>/libs/grpc/src/$1",
-      "^@app/common/http-client(|/.*)$": "<rootDir>/libs/common/http-client/src/$1"
+      "^@app/grpc(|/.*)$": "<rootDir>/libs/grpc/src/$1"
     }
   }
 }
