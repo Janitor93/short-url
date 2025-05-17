@@ -5,21 +5,27 @@ import { AnalyticsRepository } from './analytics.repository';
 import { UrlAnalytics } from './interfaces';
 import { Analytics } from './analytics.entity';
 import { appConfig } from './config';
+import { GeoIpService } from './geoip/geoip.service';
+import { CreateUrlAnalyticsDto } from './dto';
 
 @Injectable()
 export class AnalyticsService {
   constructor(
     private readonly analyticsRepository: AnalyticsRepository,
+    private readonly geoIpService: GeoIpService,
   ) {}
 
-  async getCountryByIp(): Promise<void> {
-    throw new Error('Not implemented yet');
+  async getCountryByIp(ip: string): Promise<string> {
+    const data = await this.geoIpService.getIpData(ip);
+    return data.country;
   }
 
-  async createUrlAnalytics({ userId, urlId }: UrlAnalytics): Promise<UrlAnalytics> {
+  async createUrlAnalytics({ userId, urlId, ip }: CreateUrlAnalyticsDto): Promise<UrlAnalytics> {
     const record = await this.analyticsRepository.findAll({ userId, urlId });
+    let country = null;
     if (record.data.length) throw new ConflictException('Analytics already exists');
-    return await this.analyticsRepository.save({ userId, urlId });
+    if (ip) country = await this.getCountryByIp(ip);
+    return await this.analyticsRepository.save({ userId, urlId, country });
   }
 
   async incrementClicks(id: string): Promise<void> {

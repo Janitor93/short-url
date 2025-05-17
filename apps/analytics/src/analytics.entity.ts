@@ -24,6 +24,9 @@ export class Analytics {
   @Column('number')
   clicks: number = 0;
 
+  @Column()
+  country: string;
+
   @CreateDateColumn()
   createdAt: Date;
 
