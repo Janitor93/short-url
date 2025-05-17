@@ -22,6 +22,7 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.13.2",
     "@grpc/proto-loader": "^0.7.13",
+    "@nestjs/axios": "^4.0.0",
     "@nestjs/cache-manager": "^3.0.0",
     "@nestjs/common": "^10.4.16",
     "@nestjs/config": "^4.0.0",
@@ -31,6 +32,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^11.2.0",
     "@nestjs/typeorm": "^11.0.0",
+    "axios": "^1.9.0",
     "bcrypt": "^5.1.1",
     "cache-manager": "^6.4.0",
     "cache-manager-redis-store": "^3.0.1",
@@ -93,7 +95,8 @@
     ],
     "moduleNameMapper": {
       "^@app/common(|/.*)$": "<rootDir>/libs/common/src/$1",
-      "^@app/grpc(|/.*)$": "<rootDir>/libs/grpc/src/$1"
+      "^@app/grpc(|/.*)$": "<rootDir>/libs/grpc/src/$1",
+      "^@app/common/http-client(|/.*)$": "<rootDir>/libs/common/http-client/src/$1"
     }
   }
 }
