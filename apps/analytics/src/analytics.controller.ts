@@ -5,7 +5,7 @@ import { HttpExceptionFilter, Pagination } from '@app/common';
 import { AnalyticsService } from './analytics.service';
 import { CreateUrlAnalyticsDto } from './dto';
 import { UrlAnalytics } from './interfaces';
-import { Analytics } from './analytics.entity';
+import { UrlStat } from './entities/url-stat.entity';
 
 @Controller('analytics')
 @UseFilters(HttpExceptionFilter)
@@ -36,8 +36,8 @@ export class AnalyticsController {
     status: 201,
     description: 'Statistic was incremented successful'
   })
-  async incrementClicks(@Param('id') id: string): Promise<void> {
-    await this.analyticsService.incrementClicks(id);
+  async incrementClicks(@Param('id') id: string, @Body('ip') ip?: string): Promise<void> {
+    await this.analyticsService.incrementClicks(id, ip);
   }
 
   @Get('/urls')
@@ -48,7 +48,7 @@ export class AnalyticsController {
   async getUserAnalytics(
     @Body('userId') userId: string,
     @Query('page') page: number,
-  ): Promise<Pagination<Analytics>> {
+  ): Promise<Pagination<UrlStat>> {
     return await this.analyticsService.getUserAnalytics(userId, page);
   }
 }
