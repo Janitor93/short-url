@@ -14,9 +14,7 @@ export abstract class AbstractRepository<T extends BaseEntity> {
   constructor(private readonly entity: Repository<T>) {}
 
   public async save(data: DeepPartial<T>): Promise<T> {
-    console.log('data', data);
     const entity = this.entity.create(data);
-    console.log('entity', entity);
     return await this.entity.save(entity);
   }
 
