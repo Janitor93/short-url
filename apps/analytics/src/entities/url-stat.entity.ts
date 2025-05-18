@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Analytics {
+export class UrlStat {
   @ObjectIdColumn()
   _id: ObjectId;
 

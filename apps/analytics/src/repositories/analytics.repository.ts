@@ -4,18 +4,18 @@ import { Repository } from 'typeorm';
 import { ObjectId } from 'mongodb';
 import { AbstractRepository } from '@app/common';
 
-import { Analytics } from './analytics.entity';
+import { UrlStat } from '../entities/url-stat.entity';
 
 @Injectable()
-export class AnalyticsRepository extends AbstractRepository<Analytics> {
+export class UrlStatRepository extends AbstractRepository<UrlStat> {
   constructor(
-    @InjectRepository(Analytics) private readonly analyticsRepository: Repository<Analytics>,
+    @InjectRepository(UrlStat) private readonly analyticsRepository: Repository<UrlStat>,
   ) {
     super(analyticsRepository);
   }
 
-  async increment(id: string) {
+  async increment(id: string): Promise<UrlStat> {
     const record = await this.analyticsRepository.findOneBy({ _id: new ObjectId(id) });
-    await this.analyticsRepository.save({ ...record, clicks: record.clicks + 1 });
+    return await this.analyticsRepository.save({ ...record, clicks: record.clicks + 1 });
   }
 }
